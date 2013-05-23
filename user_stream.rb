@@ -3,10 +3,11 @@ require 'yaml'
 require 'yajl'
 
 module Chizuru
-  class UserStream
+  class UserStream < Source
     DEFAULT_USER_AGENT = 'TwitterBot/1.0 (Based on Chizuru)'
 
-    def initialize(credential_path, screen_name, ca_file_path, user_agent = DEFAULT_USER_AGENT)
+    def initialize(provider, credential_path, screen_name, ca_file_path, user_agent = DEFAULT_USER_AGENT)
+      super(provider)
       raise ArgumentError unless credential_path
       cred = YAML.load_file(credential_path)
       consumer = OAuth::Consumer.new(cred['consumer_key'], cred['consumer_secret'])
@@ -22,6 +23,13 @@ module Chizuru
       raise ArgumentError unless ca_file_path
       @ca_file = ca_file_path
       @user_agent = user_agent
+    end
+
+    def start
+      puts '[UserStream] Start Streaming'
+      connect do |json|
+        @provider.receive(json)
+      end
     end
 
     def connect
@@ -40,14 +48,10 @@ module Chizuru
         request.oauth!(https, @credential[:consumer], @credential[:access_token])
 
         buf = ""
-        puts 'starting request'
         https.request(request) do |response|
-          puts 'request ok'
           response.read_body do |chunk|
-            puts 'reading http body (chunk)'
             buf << chunk
             while ((line = buf[/.+?(\r\n)+/m]) != nil)
-              puts 'line'
               begin
                 buf.sub!(line, "")
                 line.strip!
