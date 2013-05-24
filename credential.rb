@@ -8,7 +8,7 @@ module Chizuru
       @consumer = OAuth::Consumer.new(
         cred['consumer_key'],
         cred['consumer_secret'],
-        site: 'https://api.twitter.com')
+        site: 'https://api.twitter.com/1.1')
       @access_token =  OAuth::AccessToken.new(
           consumer,
           cred['access_token'],
