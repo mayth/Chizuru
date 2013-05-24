@@ -2,7 +2,7 @@ require 'oauth'
 require 'yaml'
 require 'yajl'
 
-require './source'
+require 'chizuru/source'
 
 module Chizuru
   class UserStream < Source

@@ -1,4 +1,4 @@
-require './credential'
+require 'chizuru/credential'
 
 module Chizuru
   class ConsumerHelper
