@@ -2,22 +2,16 @@ require 'oauth'
 require 'yaml'
 require 'yajl'
 
+require './source'
+
 module Chizuru
   class UserStream < Source
     DEFAULT_USER_AGENT = 'TwitterBot/1.0 (Based on Chizuru)'
 
-    def initialize(provider, credential_path, screen_name, ca_file_path, user_agent = DEFAULT_USER_AGENT)
+    def initialize(provider, cred, screen_name, ca_file_path, user_agent = DEFAULT_USER_AGENT)
       super(provider)
-      raise ArgumentError unless credential_path
-      cred = YAML.load_file(credential_path)
-      consumer = OAuth::Consumer.new(cred['consumer_key'], cred['consumer_secret'])
-      @credential = {
-        consumer: consumer,
-        access_token: OAuth::AccessToken.new(
-          consumer,
-          cred['access_token'],
-          cred['access_token_secret'])
-      }
+      raise ArgumentError unless cred
+      @credential = cred
       raise ArgumentError unless screen_name
       @screen_name = screen_name
       raise ArgumentError unless ca_file_path
@@ -45,7 +39,7 @@ module Chizuru
         request = Net::HTTP::Get.new(uri.request_uri,
                                      "User-Agent" => @user_agent,
                                      "Accept-Encoding" => "identity")
-        request.oauth!(https, @credential[:consumer], @credential[:access_token])
+        request.oauth!(https, @credential.consumer, @credential.access_token)
 
         buf = ""
         https.request(request) do |response|
