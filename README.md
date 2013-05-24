@@ -2,6 +2,21 @@ Chizuru
 =======
 re-structured twitter bot framework
 
+Installation
+============
+
+Add this line to your application's Gemfile:
+
+    gem 'Chizuru'
+
+And then execute:
+
+    $ bundle
+
+Or install it yourself as:
+
+    $ gem install Chizuru
+
 How To
 ======
 Notice: See `test.rb`.

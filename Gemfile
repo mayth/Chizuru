@@ -1,4 +1,4 @@
-source "https://rubygems.org"
+source 'https://rubygems.org'
 
-gem 'oauth'
-gem 'yajl-ruby'
+# Specify your gem's dependencies in Chizuru.gemspec
+gemspec
