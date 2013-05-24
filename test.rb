@@ -2,6 +2,7 @@ require './provider'
 require './consumer'
 require './credential'
 require './user_stream'
+require './bot'
 
 class SimpleConsumer < Chizuru::Consumer
   def receive(data)
@@ -53,17 +54,19 @@ class TweetDeliverer
   end
 end
 
-credential = Chizuru::Credential.new('credential.yaml')
-provider = Chizuru::Provider.new
-simple_consumer = SimpleConsumer.new
-simple_consumer.add_deliverer(EchoDeliverer.new)
-simple_consumer.add_deliverer(LoggingDeliverer.new('./stream.log'))
-provider.add_consumer(simple_consumer)
+bot = Chizuru::Bot.configure 'credential.yaml' do
+  source Chizuru::UserStream.new(provider, credential, 'meitanbot', 'cert', 'meitanbot/2.0 (Chizuru/1.0)')
+  echo_deliv = EchoDeliverer.new
+  log_deliv = LoggingDeliverer.new('./stream.log')
+  consumer SimpleConsumer do
+    deliverer echo_deliv
+    deliverer log_deliv
+  end
 
-meitan_consumer = MeitanConsumer.new
-meitan_consumer.add_deliverer(EchoDeliverer.new)
-meitan_consumer.add_deliverer(TweetDeliverer.new(credential))
-provider.add_consumer(meitan_consumer)
+  consumer MeitanConsumer do
+    deliverer echo_deliv
+    deliverer TweetDeliverer.new(credential)
+  end
+end
 
-source = Chizuru::UserStream.new(provider, credential, 'meitanbot', 'cert', 'meitanbot/2.0 (Chizuru/1.0)')
-source.start
+bot.start
