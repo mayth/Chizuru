@@ -22,12 +22,10 @@ module Chizuru
     end
 
     def receive(data)
-      puts '[Provider] Receive'
       @queue.enq data
     end
 
     def dispatch(data)
-      puts '[Provider] Dispatch'
       @consumers.each do |consumer|
         Thread.new do
           consumer.receive(data)
