@@ -23,11 +23,12 @@ How To
 ======
 Notice: See `test.rb`.
 
-1. Define `Consumer` and `Deliverer`.
-2. Acquire the consumer secret and access token, and save it. We use YAML file that have these keys: `consumer_key`, `consumer_secret`, `access_token`, `access_token_secret`.
-3. Prepare the source. We provide the default source that uses UserStreaming. If you decide not to use it, you must define the source class that is inherited from `Chizuru::Source`.
-4. Configure the bot. Use `Chizuru::Bot.configure`.
-5. Start it!
+1. Add `require 'chizuru'`.
+2. Define `Consumer` and `Deliverer`.
+3. Acquire the consumer secret and access token, and save it. We use YAML file that have these keys: `consumer_key`, `consumer_secret`, `access_token`, `access_token_secret`.
+4. Prepare the source. We provide the default source that uses UserStreaming. If you decide to use it, add `require 'chizuru/user_stream'` and set the instance of `Chizuru::UserStream` as the source in the next step. Otherwise, you must define the source class that is inherited from `Chizuru::Source`.
+5. Configure the bot. Use `Chizuru::Bot.configure`. Set the source and consumer.
+6. Start it!
 
 Basic Structure
 ===============
