@@ -2,6 +2,8 @@ Chizuru
 =======
 re-structured twitter bot framework
 
+On RubyGems.org: https://rubygems.org/gems/Chizuru
+
 Installation
 ============
 
